@@ -132,6 +132,11 @@ jobs:
           docker run -i -v $PWD:/pulsar-client-python python:${{matrix.python.version}}${{matrix.image.py_suffix}} \
               /pulsar-client-python/pkg/test-wheel.sh
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: wheelhouse/pulsar_client-*.whl
+
   mac-wheels:
     name: Wheel MacOS Universal2 - Py ${{matrix.py.version}}
     needs: unit-tests
@@ -171,6 +176,11 @@ jobs:
 
       - name: Build and test Mac wheels
         run: pkg/mac/build-mac-wheels.sh ${{matrix.py.version}}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: dist/pulsar_client-*.whl
 
   windows-wheels:
     name: "Python ${{ matrix.python.version }} Wheel on Windows x64"
@@ -228,6 +238,11 @@ jobs:
           python setup.py bdist_wheel
           python -m pip install ./dist/*.whl
           python -c 'import pulsar; c = pulsar.Client("pulsar://localhost:6650"); c.close()'
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: dist/*.whl
 
   check-completion:
     name: Check Completion
